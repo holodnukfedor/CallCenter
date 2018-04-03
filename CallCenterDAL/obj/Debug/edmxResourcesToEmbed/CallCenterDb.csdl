@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CallCenterDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="C__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PhoneCall">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ConnectionTime" Type="DateTime" Precision="3" />
+    <Property Name="TerminationTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ParentCallId" Type="Int32" />
+    <NavigationProperty Name="PhoneCall1" Relationship="Self.FK_dbo_PhoneCalls_dbo_PhoneCalls_ParentCallId" FromRole="PhoneCall" ToRole="PhoneCall1" />
+    <NavigationProperty Name="PhoneCall2" Relationship="Self.FK_dbo_PhoneCalls_dbo_PhoneCalls_ParentCallId" FromRole="PhoneCall1" ToRole="PhoneCall" />
+    <NavigationProperty Name="UserInPhoneCalls" Relationship="Self.FK_dbo_UserInPhoneCalls_dbo_PhoneCalls_PhoneCallId" FromRole="PhoneCall" ToRole="UserInPhoneCalls" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Patronymic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="14" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="UserInPhoneCalls" Relationship="Self.FK_dbo_UserInPhoneCalls_dbo_Users_UserId" FromRole="User" ToRole="UserInPhoneCalls" />
+  </EntityType>
+  <EntityType Name="UserInPhoneCalls">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PhoneCallId" Type="Int32" Nullable="false" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="PhoneCall" Relationship="Self.FK_dbo_UserInPhoneCalls_dbo_PhoneCalls_PhoneCallId" FromRole="UserInPhoneCalls" ToRole="PhoneCall" />
+    <NavigationProperty Name="User" Relationship="Self.FK_dbo_UserInPhoneCalls_dbo_Users_UserId" FromRole="UserInPhoneCalls" ToRole="User" />
+  </EntityType>
+  <EntityType Name="PhoneCallView">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="StartTime" />
+      <PropertyRef Name="TerminationTime" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DurationSeconds" Type="Int32" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ConnectionTime" Type="DateTime" Precision="3" />
+    <Property Name="TerminationTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ParentCallId" Type="Int32" />
+  </EntityType>
+  <Association Name="FK_dbo_PhoneCalls_dbo_PhoneCalls_ParentCallId">
+    <End Role="PhoneCall" Type="Self.PhoneCall" Multiplicity="0..1" />
+    <End Role="PhoneCall1" Type="Self.PhoneCall" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PhoneCall">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PhoneCall1">
+        <PropertyRef Name="ParentCallId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_UserInPhoneCalls_dbo_PhoneCalls_PhoneCallId">
+    <End Role="PhoneCall" Type="Self.PhoneCall" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserInPhoneCalls" Type="Self.UserInPhoneCalls" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PhoneCall">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserInPhoneCalls">
+        <PropertyRef Name="PhoneCallId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_UserInPhoneCalls_dbo_Users_UserId">
+    <End Role="User" Type="Self.User" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserInPhoneCalls" Type="Self.UserInPhoneCalls" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserInPhoneCalls">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CallCenterDbEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+    <EntitySet Name="PhoneCall" EntityType="Self.PhoneCall" />
+    <EntitySet Name="User" EntityType="Self.User" />
+    <EntitySet Name="UserInPhoneCalls" EntityType="Self.UserInPhoneCalls" />
+    <EntitySet Name="PhoneCallView" EntityType="Self.PhoneCallView" />
+    <AssociationSet Name="FK_dbo_PhoneCalls_dbo_PhoneCalls_ParentCallId" Association="Self.FK_dbo_PhoneCalls_dbo_PhoneCalls_ParentCallId">
+      <End Role="PhoneCall" EntitySet="PhoneCall" />
+      <End Role="PhoneCall1" EntitySet="PhoneCall" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_UserInPhoneCalls_dbo_PhoneCalls_PhoneCallId" Association="Self.FK_dbo_UserInPhoneCalls_dbo_PhoneCalls_PhoneCallId">
+      <End Role="PhoneCall" EntitySet="PhoneCall" />
+      <End Role="UserInPhoneCalls" EntitySet="UserInPhoneCalls" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_UserInPhoneCalls_dbo_Users_UserId" Association="Self.FK_dbo_UserInPhoneCalls_dbo_Users_UserId">
+      <End Role="User" EntitySet="User" />
+      <End Role="UserInPhoneCalls" EntitySet="UserInPhoneCalls" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

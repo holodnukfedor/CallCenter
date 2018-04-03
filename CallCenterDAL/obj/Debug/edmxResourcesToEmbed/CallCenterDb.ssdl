@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CallCenterDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+    <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+    <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PhoneCall">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="StartTime" Type="datetime" Nullable="false" />
+    <Property Name="ConnectionTime" Type="datetime" />
+    <Property Name="TerminationTime" Type="datetime" Nullable="false" />
+    <Property Name="ParentCallId" Type="int" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Patronymic" Type="nvarchar" MaxLength="50" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="14" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserInPhoneCalls">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PhoneCallId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'CallCenterDb.dbo.PhoneCallView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="PhoneCallView">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="StartTime" />
+      <PropertyRef Name="TerminationTime" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DurationSeconds" Type="int" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="StartTime" Type="datetime" Nullable="false" />
+    <Property Name="ConnectionTime" Type="datetime" />
+    <Property Name="TerminationTime" Type="datetime" Nullable="false" />
+    <Property Name="ParentCallId" Type="int" />
+  </EntityType>
+  <Association Name="FK_dbo_PhoneCalls_dbo_PhoneCalls_ParentCallId">
+    <End Role="PhoneCall" Type="Self.PhoneCall" Multiplicity="0..1" />
+    <End Role="PhoneCall1" Type="Self.PhoneCall" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PhoneCall">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PhoneCall1">
+        <PropertyRef Name="ParentCallId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_UserInPhoneCalls_dbo_PhoneCalls_PhoneCallId">
+    <End Role="PhoneCall" Type="Self.PhoneCall" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserInPhoneCalls" Type="Self.UserInPhoneCalls" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PhoneCall">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserInPhoneCalls">
+        <PropertyRef Name="PhoneCallId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_UserInPhoneCalls_dbo_Users_UserId">
+    <End Role="User" Type="Self.User" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserInPhoneCalls" Type="Self.UserInPhoneCalls" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserInPhoneCalls">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CallCenterDbModelStoreContainer">
+    <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PhoneCall" EntityType="Self.PhoneCall" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserInPhoneCalls" EntityType="Self.UserInPhoneCalls" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PhoneCallView" EntityType="Self.PhoneCallView" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [PhoneCallView].[Id] AS [Id], 
+    [PhoneCallView].[DurationSeconds] AS [DurationSeconds], 
+    [PhoneCallView].[Status] AS [Status], 
+    [PhoneCallView].[StartTime] AS [StartTime], 
+    [PhoneCallView].[ConnectionTime] AS [ConnectionTime], 
+    [PhoneCallView].[TerminationTime] AS [TerminationTime], 
+    [PhoneCallView].[ParentCallId] AS [ParentCallId]
+    FROM [dbo].[PhoneCallView] AS [PhoneCallView]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_dbo_PhoneCalls_dbo_PhoneCalls_ParentCallId" Association="Self.FK_dbo_PhoneCalls_dbo_PhoneCalls_ParentCallId">
+      <End Role="PhoneCall" EntitySet="PhoneCall" />
+      <End Role="PhoneCall1" EntitySet="PhoneCall" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_UserInPhoneCalls_dbo_PhoneCalls_PhoneCallId" Association="Self.FK_dbo_UserInPhoneCalls_dbo_PhoneCalls_PhoneCallId">
+      <End Role="PhoneCall" EntitySet="PhoneCall" />
+      <End Role="UserInPhoneCalls" EntitySet="UserInPhoneCalls" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_UserInPhoneCalls_dbo_Users_UserId" Association="Self.FK_dbo_UserInPhoneCalls_dbo_Users_UserId">
+      <End Role="User" EntitySet="User" />
+      <End Role="UserInPhoneCalls" EntitySet="UserInPhoneCalls" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
