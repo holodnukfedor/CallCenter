@@ -14,3 +14,5 @@ CallCenterBLL/bin/
 CallCenterDAL/bin/
 DALTest/bin/
 HolodDAL/bin/
+CallCenter/bin/
+CallCenter/obj/Debug/

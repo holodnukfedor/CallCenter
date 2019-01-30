@@ -14,9 +14,6 @@ namespace CallCenterDAL.Context
 
         private void AddPhoneCall(CallCenterDbContext context, PhoneCall call)
         {
-            if (call.ConnectionTime != null)
-                call.DurationSeconds = (int) (call.TerminationTime - (DateTime)call.ConnectionTime).TotalSeconds;
-
             context.PhoneCalls.Add(call);
         }
 
@@ -118,6 +115,9 @@ namespace CallCenterDAL.Context
 
         protected override void Seed(CallCenterDbContext context)
         {
+            context.Database.ExecuteSqlCommand("ALTER TABLE PhoneCalls DROP COLUMN DurationSeconds");
+            context.Database.ExecuteSqlCommand("ALTER TABLE PhoneCalls ADD DurationSeconds AS datediff(second, ConnectionTime, TerminationTime)");
+
             context.Users.Add(new User
             {
                 Id = 1,

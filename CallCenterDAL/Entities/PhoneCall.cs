@@ -19,7 +19,8 @@ namespace CallCenterDAL.Entities
 
         public int? ParentCallId { get; set; }
 
-        public int? DurationSeconds { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public int? DurationSeconds { get; private set; }
 
         public virtual PhoneCall ParentCall { get; set; }
 
