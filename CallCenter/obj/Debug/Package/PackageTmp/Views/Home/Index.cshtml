@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Телефонный центр";
+}
+
+@section styles {
+    @Styles.Render("~/Content/themes/base/minified/jquery-ui.min.css")
+    @Styles.Render("~/Content/themes/base/minified/jquery.ui.theme.min.css")
+    @Styles.Render("~/Content/timepicker.css")
+    @Styles.Render("~/Content/jquery.jqGrid/ui.jqgrid.css")
+    @Styles.Render("~/Content/Views/Home/index.css")
+}
+
+<div class="row">
+    <h1>Телефонный центр</h1>
+    <hr />
+</div>
+
+<div class="row">
+    <div class="col-md-12" id="gridOwner">
+        <table id="phoneCallTable"></table>
+        <div id="phoneCallTablePager"></div>
+    </div>
+</div>
+<div class="row marginTop">
+    <div class="col-md-12">
+        <div class="alert alert-info" role="alert">
+            <b>Легенда участников развоговора: </b>Id - идентификатор пользователя, Ph - телефон, S - статус (A - Acccepted, принял звонок; C - Called, позвонил; D - Dropped, сбросил; M - Missed, пропустил; E - error, ошибка)<br />
+            <b>Подсказка: </b> Чтобы увидеть детально информацию об участниках разговора, щелкните по кнопке "Подробно" внизу таблицы <br />
+            Чтобы осуществить выборку по параметрам щелкните по кнопке "Фильтр" внизу таблицы
+            Отображаются дочерние звонки только первого уровня <br />
+            Продолжительность звонка считается как разница между временем соединения и временем терминирования. Соответственно считается только для тех звонков, которые были соединены
+            <br />
+            <b>Фильтры</b>
+            <ul>
+                <li>В фильтрации по продолжительности задаются секунды</li>
+                <li>В фильтрации по "Участникам разговора" задается телефон. Чтобы фильтровать по нескольким телефонам нужно добавлять новое правило фильтрации (Кнопка "+")</li>
+                <li>В фильтрации по "Id дочерних звонков" задается один Id, как целочисленное значение. Для фильтрации по нескольким Id нужно добавить новое правило фильтрации (Кнопка "+")</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="errorDialog" title="Ошибка">
+    <p id="errorDialogMessage"></p>
+</div>
+
+
+@section scripts {
+    @Scripts.Render("~/Scripts/jquery-ui-1.10.0.min.js")
+    @Scripts.Render("~/Scripts/timepicker.js")
+    @Scripts.Render("~/Scripts/i18n/grid.locale-ru.js")
+    @Scripts.Render("~/Scripts/i18n/datepicker-ru.js")
+    @Scripts.Render("~/Scripts/i18n/jquery-ui-timepicker-ru.js")
+    @Scripts.Render("~/Scripts/jquery.jqGrid.min.js")
+    @Scripts.Render("~/Scripts/Views/Home/index.js");
+}

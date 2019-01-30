@@ -1,0 +1,14 @@
+﻿@using CallCenterDAL.Entities;
+@using HolodDAL;
+<select>
+    @{
+        var enumCollection = Enum.GetValues(typeof(PhoneCallStatus));
+        
+        <option selected value="@((int) enumCollection.GetValue(0))">@(((PhoneCallStatus)enumCollection.GetValue(0)).GetDescription())</option>
+
+        for (int i = 1; i < enumCollection.Length; ++i)
+        {
+            <option value="@((int) enumCollection.GetValue(i))">@(((PhoneCallStatus)enumCollection.GetValue(i)).GetDescription())</option>
+        }
+    }
+</select>

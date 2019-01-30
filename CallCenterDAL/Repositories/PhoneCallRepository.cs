@@ -49,5 +49,10 @@ namespace CallCenterDAL.Repositories
         {
             throw new NotImplementedException("It is nessasary create validation rules");
         }
+
+        public override IEnumerable<PhoneCall> FindAmount(FilterWithOperators filter, int fromRow, int amount, String orderPropertyName, SortOrder sortOrder = SortOrder.Asc)
+        {
+            return base.FindAmount(filter, fromRow, amount, orderPropertyName, sortOrder);
+        }
     }
 }

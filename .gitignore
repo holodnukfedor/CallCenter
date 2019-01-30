@@ -1,0 +1,16 @@
+CallCenterBLL/bin/Debug/
+CallCenterDAL/bin/Debug/
+DALTest/bin/Debug/
+HolodDAL/bin/Debug/
+*.com
+*.class
+*.dll
+*.exe
+*.pdb
+*.dll.config
+*.cache
+*.suo
+CallCenterBLL/bin/
+CallCenterDAL/bin/
+DALTest/bin/
+HolodDAL/bin/
