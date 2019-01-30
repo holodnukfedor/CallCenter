@@ -24,7 +24,7 @@
 Скрипты, которые ее создают по адресу [https://github.com/holodnukfedor/CallCenter/tree/master/SQLScripts](https://github.com/holodnukfedor/CallCenter/tree/master/SQLScripts)
 Хотя скрипты не нужны для создания БД, поскольку используется подход Entity framework Code First, при котором также в проекте БД заполняется тестовыми данными
 
-Поле таблицы PhoneCalls DurationSeconds является вычисляемым как разница между ConnectionTime и DurationTime в секундах, фильт для него также работает в секундах
+Поле таблицы PhoneCalls DurationSeconds является вычисляемым как разница между ConnectionTime и DurationTime в секундах, фильтр для него также работает в секундах
 В проекте реализован гибкий фильтр с помощью DynamicLinq, который создать предикаты фильтрации на основе строк приходящих от клиента вроде {GroupOperator: "AND", FilterRules: [{PropertyName: "Value", "PropertyValue" : "Value", op: "eq"}, {PropertyName: "Value2", "PropertyValue" : "Value2", op: "lt"}]}.
 Данный фильтр можно использовать повторно для любых других таблиц. 
 
